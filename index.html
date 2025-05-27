@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Benny Translating App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="themeSwitch">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div class="container">
+    <div class="wrapper">
+      <div class="input_box">
+        <textarea placeholder="Enter Text" class="from_text"></textarea>
+        <textarea placeholder="Translation" class="to_text" readonly disabled></textarea>
+      </div>
+      <div class="row">
+        <div class="select">
+          <select name="from"></select>
+        </div>
+        <div class="select">
+          <select name="to"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Benny Translating App — All rights reserved</p>
+    <a href="BennyTranslate.apk" download class="apk-btn">Download APK</a>
+  </footer>
+
+  <script src="country.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
