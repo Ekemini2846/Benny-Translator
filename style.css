@@ -5,11 +5,15 @@
   --text: #222;
   --primary: #6a11cb;
   --secondary: #2575fc;
+  --card: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
 body.dark {
   --bg: #121212;
   --text: #f0f0f0;
+  --card: #1e1e1e;
+  --shadow: rgba(255, 255, 255, 0.05);
 }
 
 * {
@@ -26,36 +30,88 @@ body {
   flex-direction: column;
   min-height: 100vh;
   align-items: center;
-  padding: 20px;
+  padding-top: 80px;
+}
+
+
+.output-container {
+   position: relative;
+  width: 100%;
+}
+
+#copyTo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  color: var(--text);
+}
+
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  box-shadow: 0 2px 8px var(--shadow);
+  z-index: 1000;
 }
 
 .container {
   width: 100%;
   max-width: 500px;
-  background: #fff;
+  margin-top: 50px;
+  background: var(--card);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-  background: var(--bg);
+  box-shadow: 0 5px 20px var(--shadow);
   color: var(--text);
 }
 
 .input_box {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
+
+.textarea-wrapper {
+  position: relative;
+}
+
+.to_text {
+  padding-right: 40px; /* space for the button */
+}
+
 
 textarea {
   width: 100%;
   height: 120px;
   resize: none;
-  padding: 10px;
+  padding: 10px 40px 10px 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background: inherit;
   color: inherit;
   font-size: 14px;
+
+}
+
+.copy-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text);
 }
 
 .row {
@@ -97,9 +153,10 @@ footer {
 }
 
 .theme-toggle {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
+  z-index: 1001;
 }
 
 .switch {
@@ -115,10 +172,29 @@ footer {
   height: 0;
 }
 
+:root {
+  --placeholder-color: #666;
+  /* dark placeholder on light background */
+}
+
+body.dark {
+  --placeholder-color: #ccc;
+  /* light placeholder on dark background */
+}
+
+textarea::placeholder {
+  color: var(--placeholder-color);
+  opacity: 1;
+  /* ensure it's fully visible */
+}
+
+
 .slider {
   position: absolute;
-  top: 0; left: 0;
-  right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: #ccc;
   border-radius: 34px;
   transition: .4s;
@@ -136,10 +212,47 @@ footer {
   border-radius: 50%;
 }
 
-input:checked + .slider {
+.toast {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 19px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+
+input:checked+.slider {
   background-color: var(--primary);
 }
 
-input:checked + .slider::before {
+input:checked+.slider::before {
   transform: translateX(24px);
+}
+
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .container {
+    padding: 16px;
+    margin-top: 40px;
+  }
+
+  textarea {
+    height: 100px;
+  }
 }
