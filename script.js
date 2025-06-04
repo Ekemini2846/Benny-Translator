@@ -9,7 +9,7 @@ selectCountry.forEach((select, index) => {
     let option = document.createElement("option");
     option.value = country;
     option.innerText = countries[country];
-    // Set defaults: English to English
+    // Default: English for "from", Spanish for "to"
     if ((index === 0 && country === "en-GB") || (index === 1 && country === "es-ES")) {
       option.selected = true;
     }
@@ -17,8 +17,14 @@ selectCountry.forEach((select, index) => {
   }
 });
 
-// Translation as you type
-fromText.addEventListener("input", async () => {
+// Translation as you type with debounce (to avoid too many API calls)
+let debounceTimer;
+fromText.addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(translateText, 500);
+});
+
+async function translateText() {
   const text = fromText.value.trim();
   if (!text) {
     toText.value = "";
@@ -27,24 +33,37 @@ fromText.addEventListener("input", async () => {
 
   const translateFrom = selectCountry[0].value;
   const translateTo = selectCountry[1].value;
+
+  // Using MyMemory API
   const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${translateFrom}|${translateTo}`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
-    toText.value = data.responseData.translatedText;
+    if (data && data.responseData && data.responseData.translatedText) {
+      toText.value = data.responseData.translatedText;
+    } else {
+      toText.value = "No translation found.";
+    }
   } catch (err) {
-    toText.value = "Error translating.";
+    toText.value = "Error during translation.";
     console.error(err);
   }
-});
+}
 
 // Dark mode toggle
 themeSwitch.addEventListener("change", () => {
   document.body.classList.toggle("dark");
 });
 
-// Copy buttons
+// Copy translation button
+document.getElementById("copyTo").addEventListener("click", () => {
+  if (toText.value.trim() !== "") {
+    navigator.clipboard.writeText(toText.value);
+    showToast("Copied!");
+  }
+});
+
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -53,13 +72,3 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
-
-// Example usage inside your copy event
-document.getElementById("copyTo").addEventListener("click", () => {
-  const toText = document.querySelector(".to_text");
-  if (toText.value.trim() !== "") {
-    navigator.clipboard.writeText(toText.value);
-    showToast("Copied!");
-  }
-});
-
